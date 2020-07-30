@@ -17,6 +17,7 @@ import shutil
 import tempfile
 import bz2
 
+import idaapi
 import ida_auto
 import ida_idaapi
 import ida_kernwin
@@ -296,7 +297,19 @@ class SaveActionHandler(ActionHandler):
     _DIALOG = SaveDialog
 
     @staticmethod
+    def check_before_upload():
+        reserved_id = idaapi.get_struc_id("reserverd_by_idarling")
+        if reserved_id == ida_idaapi.BADADDR:
+            # First time, create 20 structures
+            for i in range(20):
+                idaapi.add_struc(ida_idaapi.BADADDR, None)
+            idaapi.add_struc(ida_idaapi.BADADDR, "reserverd_by_idarling")
+
+    @staticmethod
     def upload_file(plugin, packet):
+        # Check before upload
+        SaveActionHandler.check_before_upload()
+
         # Save the current database with a tick=0 since it is a new snapshot
         plugin.core.tick = 0
         plugin.core.save_netnode()

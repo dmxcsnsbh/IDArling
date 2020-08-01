@@ -88,12 +88,13 @@ class Plugin(ida_idaapi.plugin_t):
         r, g, b = colorsys.hls_to_rgb(random.random(), 0.5, 1.0)
         color = int(b * 255) << 16 | int(g * 255) << 8 | int(r * 255)
         file_path = Plugin.user_resource("files", "")
+        tmp_name = "unnamed_" + str(random.randint(1000,9999))
         return {
             "level": logging.INFO,
             "servers": [],
             "keep": {"cnt": 4, "intvl": 15, "idle": 240},
             "cursors": {"navbar": True, "funcs": True, "disasm": True},
-            "user": {"color": color, "name": "unnamed", "notifications": True},
+            "user": {"color": color, "name": tmp_name, "notifications": True},
             "files_dir": file_path,
         }
 
